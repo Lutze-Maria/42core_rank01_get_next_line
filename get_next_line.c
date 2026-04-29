@@ -1,49 +1,77 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lschawer <lschawer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/29 15:36:09 by lschawer          #+#    #+#             */
+/*   Updated: 2026/04/29 15:56:55 by lschawer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 
-
-char    *ft_update_stash(char *str)
+char    *ft_update_stash(char *old_stash)
 {
     // Update the Stash: 
     // Re-save the leftovers into the static variable for next time.
-    while (stash[i])
-    {
-        if (stash[i] == "\n")
-        {
-            
-        }
+    char    *updated_stash;
+    int     i;
+    int     k;
+    
+    i = 0;
+    while (old_stash[i] && old_stash[i] != '\n')
         i++;
+    if (!old_stash[i] || !old_stash[i + 1])
+    {
+        free(old_stash);
+        return (NULL);
     }
+    updated_stash = malloc(sizeof(char) * (ft_strlen(old_stash + i +1) + 1));
+    if (!updated_stash)
+    {
+        free (old_stash);
+        return (NULL);
+    }
+    i++;
+    while (old_stash[i])
+        updated_stash[k++] = old_stash[i++];
+    updated_stash[k] = '\0';
+    free (old_stash);
+    return (updated_stash);
 }
 
-ft_strcpy_adv(char *copy, char *original, int len)
+char    *ft_strcpy_adv(char *copy, char *original, int content)
 {
     int i;
 
     i = 0;
-
+    while (i < content)
+    {
+        copy[i] = original[i];
+        i++;
+    }
+    copy[i] = '\0';
+    return (copy);
 }
 
 char    *ft_extract(char *str)
 {
-    /*Check: looks at the static stash, finds the \n,
-    Output:  Extract the Line: Create a new string that stops at the \n.
-    */
-
     char    *line;
+    int     to_copy;
     int     i;
-    int     len;
 
     i = 0;
-    while (stash[i])
-    {
-        if (stash[i] == "\n")
-        {
-            len = i + 1;
-            line = malloc(sizeof(char) * (len + 1));
-            ft_strcpy_adv(line, stash, i);
-        }
+    while (str[i] && str[i] != '\n')
         i++;
-    }
+    if (str[i] == '\n')
+        to_copy = i + 1;
+    else
+        to_copy = i;
+    line = malloc(sizeof(char) * (to_copy + 1));
+    if (!line)
+        return (NULL);
+    ft_strcpy_adv(line, str, to_copy);
     return (line);
 }
 
@@ -95,8 +123,7 @@ char    *ft_read_one_line(int fd, void *buffer, size_t buf_size)
     return (line);
 }
 
-
-char *get_next_line(int fd)
+char    *get_next_line(int fd)
 {
     ssize_t bytes_read;
     void *buffer;

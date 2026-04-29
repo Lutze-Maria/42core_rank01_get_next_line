@@ -6,12 +6,12 @@
 /*   By: lschawer <lschawer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 15:42:39 by lschawer          #+#    #+#             */
-/*   Updated: 2026/04/27 15:43:44 by lschawer         ###   ########.fr       */
+/*   Updated: 2026/04/29 15:37:39 by lschawer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
 # include <stdlib.h>
 # include <unistd.h>
