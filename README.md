@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by <lschawer>.*
+*This project has been created as part of the 42 curriculum by lschawer.*
 # Get Next Line
 
 
@@ -14,10 +14,10 @@ This project allowed me to add a highly useful function to my collection in my l
 The Makefile compiles with the flags `-Wall`, `-Wextra`, and `-Werror`, using `cc`.
 The Makefile contains the following rules:
 
-make all = default rule to create `get_next_line.a`
-make clean = deletes the object files generated during compilation
-make fclean = deletes the object files AND the library (`get_next_line.`)
-make re = performs `fclean` followed by an `all` to re-compile everything from scratch
+*make all* = default rule to create `get_next_line.a`
+*make clean* = deletes the object files generated during compilation
+*make fclean* = deletes the object files AND the library (`get_next_line.`)
+*make re* = performs `fclean` followed by an `all` to re-compile everything from scratch
 
 **Using get_next_line**
 To use Libft in your project, include the header and link the library:
@@ -29,11 +29,11 @@ To build this library I have used the following resources:
 • subject.pdf: Detailed assignment requirements.
 • man7.org: Linux manual pages for standard functions.
 • 42-cursus.gitbook.io: Simplified descriptions and logic for non-standard functions.
-• libftTester (Tripouille): Unit testing for all functions.
+• ... ... : Unit testing for all functions.
 • CS50 & freeCodeCamp: Conceptual learning for linked lists.
-• AI Assistance: Used for clarifying concepts (e.g., understanding double pointers lst).
+• AI Assistance: Used for clarifying concepts (e.g. ).
 
 
-## Detailed about the algorithm
+## Details about the algorithm
 A detailed explanation and justification of the algorithm selected for this project
-must also be included.
+must also be included. >>> 

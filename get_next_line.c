@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-char	*ft_update_stash(char *old_stash)
+char	*ft_update_stash(char *old_stash).   // TODO static probably.
 {
 	char	*updated_stash;
 	int		i;
@@ -33,6 +33,7 @@ char	*ft_update_stash(char *old_stash)
 		return (NULL);
 	}
 	i++;
+	k = 0;
 	while (old_stash[i])
 		updated_stash[k++] = old_stash[i++];
 	updated_stash[k] = '\0';
@@ -60,18 +61,18 @@ char	*ft_extract(char *str)
 	return (line);
 }
 
-char	*ft_fill_stash(int fd, void *buffer, size_t buf_size, char *stash)
+char	*ft_fill_stash(int fd, char *buffer, size_t buf_size, char *stash)
 {
 	ssize_t	bytes_read;
 	char	*tmp;
 
 	bytes_read = 1;
-	while (!ft_strchr(stash, 10) && bytes_read > 0)
+	while (!ft_strchr(stash, 10) && bytes_read > 0). //TODO 10?
 	{
 		bytes_read = read(fd, buffer, buf_size);
 		if (bytes_read == -1)
 		{
-			free (stash)
+			free (stash);
 			stash = NULL;
 			return (NULL);
 		}
@@ -97,7 +98,7 @@ char	*ft_read_one_line(int fd, void *buffer, size_t buf_size)
 			return (NULL);
 	}
 	stash = ft_fill_stash(fd, buffer, buf_size, stash);
-	if (!stash || *stash == "\0")
+	if (!stash || *stash == '\0')
 	{
 		free (stash);
 		stash = NULL;
@@ -110,14 +111,14 @@ char	*ft_read_one_line(int fd, void *buffer, size_t buf_size)
 
 char	*get_next_line(int fd)
 {
-	ssize_t	bytes_read;
+	//ssize_t	bytes_read;
 	void	*buffer;
 	char	*line;
 
 	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!readbuf)
+	if (!buffer)
 		return (NULL);
 	line = ft_read_one_line(fd, buffer, BUFFER_SIZE);
 	free (buffer);
