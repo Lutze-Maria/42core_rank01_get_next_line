@@ -3,124 +3,204 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lschawer <lschawer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lschawer <lschawer@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 15:36:09 by lschawer          #+#    #+#             */
-/*   Updated: 2026/05/01 18:38:38 by lschawer         ###   ########.fr       */
+/*   Updated: 2026/06/05 18:29:24 by lschawer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_update_stash(char *old_stash).   // TODO static probably.
+static char	*ft_offset_stash(char *stash, char *line)
 {
-	char	*updated_stash;
-	int		i;
-	int		k;
+	int	len;
+	int	j;
 
-	i = 0;
-	while (old_stash[i] && old_stash[i] != '\n')
-		i++;
-	if (!old_stash[i] || !old_stash[i + 1])
+	if (!stash || !line)
+		return (stash);
+	len = ft_strlen(line);
+	if (stash[len] == '\0')
 	{
-		free(old_stash);
+		free (stash);
 		return (NULL);
 	}
-	updated_stash = malloc(sizeof(char) * (ft_strlen(old_stash + i +1) + 1));
-	if (!updated_stash)
+	j = 0;
+	while (stash[len + j])
 	{
-		free (old_stash);
-		return (NULL);
+		stash[j] = stash[len + j];
+		j++;
 	}
-	i++;
-	k = 0;
-	while (old_stash[i])
-		updated_stash[k++] = old_stash[i++];
-	updated_stash[k] = '\0';
-	free (old_stash);
-	return (updated_stash);
+	stash[j] = '\0';
+	return (stash);
 }
 
-char	*ft_extract(char *str)
+static char	*ft_extract(char *stash)
 {
 	char	*line;
 	int		to_copy;
 	int		i;
 
-	i = 0;
-	while (str[i] && str[i] != '\n')
-		i++;
-	if (str[i] == '\n')
-		to_copy = i + 1;
-	else
-		to_copy = i;
+	if (!stash || stash[0] == '\0')
+		return (NULL);
+	to_copy = 0;
+	while (stash[to_copy] && stash[to_copy] != '\n')
+		to_copy++;
+	if (stash[to_copy] == '\n')
+		to_copy++;
 	line = malloc(sizeof(char) * (to_copy + 1));
 	if (!line)
 		return (NULL);
-	ft_strcpy_adv(line, str, to_copy);
+	i = 0;
+	while (i < to_copy)
+	{
+		line[i] = stash[i];
+		i++;
+	}
+	line[i] = '\0';
 	return (line);
 }
 
-char	*ft_fill_stash(int fd, char *buffer, size_t buf_size, char *stash)
+static char	*ft_fill_stash(int fd, char *buffer, char *stash)
 {
 	ssize_t	bytes_read;
-	char	*tmp;
 
+	if (!stash)
+		return (NULL);
 	bytes_read = 1;
-	while (!ft_strchr(stash, 10) && bytes_read > 0). //TODO 10?
+	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
-		bytes_read = read(fd, buffer, buf_size);
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
 		{
-			free (stash);
-			stash = NULL;
+			free(stash);
 			return (NULL);
 		}
+		if (bytes_read == 0)
+			break ;
 		buffer[bytes_read] = '\0';
-		tmp = stash;
-		stash = ft_strjoin(stash, buffer);
-		if (!stash)
-        	return (NULL);
-		free(tmp);
+		stash = ft_gnl_strjoin(stash, buffer);
 	}
 	return (stash);
 }
 
-char	*ft_read_one_line(int fd, void *buffer, size_t buf_size)
-{
-	char		*line;
-	static char	*stash;
-
-	if (!stash)
-	{
-		stash = ft_strdup("");
-		if (!stash)
-			return (NULL);
-	}
-	stash = ft_fill_stash(fd, buffer, buf_size, stash);
-	if (!stash || *stash == '\0')
-	{
-		free (stash);
-		stash = NULL;
-		return (NULL);
-	}
-	line = ft_extract(stash);
-	stash = ft_update_stash(stash);
-	return (line);
-}
-
 char	*get_next_line(int fd)
 {
-	//ssize_t	bytes_read;
-	void	*buffer;
-	char	*line;
+	static char	*stash;
+	char		*buffer;
+	char		*line;
 
-	if (BUFFER_SIZE <= 0 || fd < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (!stash)
+		stash = ft_strdup("");
+	if (!stash)
 		return (NULL);
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
-	line = ft_read_one_line(fd, buffer, BUFFER_SIZE);
-	free (buffer);
+	}
+	stash = ft_fill_stash(fd, buffer, stash);
+	free(buffer);
+	if (!stash)
+		return (NULL);
+	line = ft_extract(stash);
+	stash = ft_offset_stash(stash, line);
+	if (!line)
+    {
+        if (stash)
+        {
+            free(stash);
+            stash = NULL;
+        }
+        return (NULL);
+    }
 	return (line);
 }
+
+/* 
+char	*get_next_line(int fd)
+{
+	static char	*stash;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (!stash)
+		stash = ft_strdup("");
+	if (!stash)
+		return (NULL);
+	stash = ft_fill_stash(fd, stash);
+	if (!stash)
+		return (NULL);
+	line = ft_extract(stash);
+	stash = ft_offset_stash(stash, line);
+	if (!line)
+	{
+		if (stash)
+		{
+			free(stash);
+			stash = NULL;
+		}
+		return (NULL);
+	}
+	return (line);
+}
+ */
+
+/* 
+static char	*ft_offset_stash(char *stash)  // wie mem_move
+{
+	char	*new_stash;
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (!stash[i])
+		return (free(stash), NULL);
+	if (!stash[i + 1])
+		return (free(stash), NULL);
+	new_stash = malloc(sizeof(char) * (ft_strlen(stash + i + 1) + 1));  
+	  malloc braucht man hier nicht
+	if (!new_stash)
+		return (free(stash), NULL);
+	j = 0;
+	i++;
+	while (stash[i])
+		new_stash[j++] = stash[i++];
+	new_stash[j] = '\0';
+	free(stash);
+	return (new_stash);
+}
+ */
+/* 
+#include <fcntl.h>
+#include <stdio.h>
+
+int	main(void)
+{
+	int		fd;
+	char	*line;
+
+	fd = open("test3.txt", O_RDONLY);
+	if (fd == -1)
+	{
+		perror("Error opening file");
+		return (1);
+	}
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
+		printf("%s", line);
+		free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
+	return (0);
+}
+ */

@@ -5,29 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lschawer <lschawer@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/01 18:31:37 by lschawer          #+#    #+#             */
-/*   Updated: 2026/06/04 09:33:01 by lschawer         ###   ########.fr       */
+/*   Created: 2026/06/04 11:12:55 by lschawer          #+#    #+#             */
+/*   Updated: 2026/06/05 18:04:34 by lschawer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strcpy_adv(char *copy, char *original, int content)
-{
-	int	i;
-
-	i = 0;
-	while (i < content)
-	{
-		copy[i] = original[i];
-		i++;
-	}
-	copy[i] = '\0';
-	return (copy);
-}
-
 char	*ft_strchr(const char *s, int c)
 {
+	if (!s)
+		return (NULL);
 	while (*s != '\0')
 	{
 		if (*s == (char)c)
@@ -39,30 +27,53 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char	*ft_strcpy_join(char *dst, const char *src)
+size_t	ft_strlen(const char *s) //TO DO: adaptieren: bis deliminator
 {
-	while (*src)
-	{
-		*dst = *src;
-		dst++;
-		src++;
-	}
-	*dst = '\0';
-	return (dst);
+	size_t	i;
+
+	i = 0;
+	while (s && s[i] != '\0')
+		i++;
+	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin_rest(char *jstr, char const *buffer, size_t i)
+{
+	size_t	j;
+
+	j = 0;
+	while (buffer[j])
+	{
+		jstr[i + j] = buffer[j];
+		j++;
+	}
+	jstr[i + j] = '\0';
+	return (jstr);
+}
+
+char	*ft_gnl_strjoin(char *stash, char const *buffer)
 {
 	char	*jstr;
-	char	*ptr;
+	size_t	i;
 
-	if (!s1 || !s2)		//TODO Ich würd wenn eins von den beiden NULL ist eher strdup vom anderen returnen
-		return (0);
-	jstr = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	if (!stash)
+		return (ft_strdup(buffer));
+	if (!buffer)
+		return (ft_strdup(stash));
+	jstr = malloc(sizeof(char) * (ft_strlen(stash) + ft_strlen(buffer) + 1));
 	if (jstr == 0)
-		return (0);
-	ptr = ft_strcpy_join(jstr, s1);
-	ft_strcpy_join(ptr, s2);
+	{
+		free(stash);
+		return (NULL);
+	}
+	i = 0;
+	while (stash[i])
+	{
+		jstr[i] = stash[i];
+		i++;
+	}
+	ft_strjoin_rest(jstr, buffer, i);
+	free(stash);
 	return (jstr);
 }
 
@@ -70,14 +81,16 @@ char	*ft_strdup(const char *s)
 {
 	int		i;
 	char	*dest;
+	size_t	len;
 
 	if (!s)
 		return (NULL);
-	dest = (char *)malloc(ft_strlen(s) + 1);
-	if (dest == 0)
-		return (0);
+	len = ft_strlen(s);
+	dest = (char *)malloc(sizeof(char) * (len + 1));
+	if (dest == NULL)
+		return (NULL);
 	i = 0;
-	while (s[i])
+	while (s[i] != '\0')
 	{
 		dest[i] = s[i];
 		i++;
@@ -85,15 +98,19 @@ char	*ft_strdup(const char *s)
 	dest[i] = '\0';
 	return (dest);
 }
-
-size_t	ft_strlen(const char *s)
+/* 
+char	*ft_strcpy(char *dst, const char *src)
 {
-	size_t	c;
+	char	*start;
 
-	c = 0;
-	while (*s++)
+	start = dst;
+	while (*src)
 	{
-		c++;
+		*dst = *src;
+		dst++;
+		src++;
 	}
-	return (c);
+	*dst = '\0';
+	return (start);
 }
+ */
