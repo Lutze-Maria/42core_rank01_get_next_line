@@ -6,7 +6,7 @@
 /*   By: lschawer <lschawer@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 11:12:55 by lschawer          #+#    #+#             */
-/*   Updated: 2026/06/05 18:04:34 by lschawer         ###   ########.fr       */
+/*   Updated: 2026/06/06 09:59:03 by lschawer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-size_t	ft_strlen(const char *s) //TO DO: adaptieren: bis deliminator
+size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
@@ -98,19 +98,3 @@ char	*ft_strdup(const char *s)
 	dest[i] = '\0';
 	return (dest);
 }
-/* 
-char	*ft_strcpy(char *dst, const char *src)
-{
-	char	*start;
-
-	start = dst;
-	while (*src)
-	{
-		*dst = *src;
-		dst++;
-		src++;
-	}
-	*dst = '\0';
-	return (start);
-}
- */

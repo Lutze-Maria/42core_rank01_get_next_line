@@ -6,7 +6,7 @@
 /*   By: lschawer <lschawer@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 11:14:43 by lschawer          #+#    #+#             */
-/*   Updated: 2026/06/05 14:40:48 by lschawer         ###   ########.fr       */
+/*   Updated: 2026/06/06 10:01:41 by lschawer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,17 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 42
+# endif
+
+# ifndef DELIMITER
+#  define DELIMITER '\n'
 # endif
 
 # include <stdlib.h>
 # include <unistd.h>
 
-// main logic functions
+// main logic function
 char	*get_next_line(int fd);
 
 // utility functions
