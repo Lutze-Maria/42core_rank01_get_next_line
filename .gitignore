@@ -1,0 +1,9 @@
+# Ignore testing text files
+test.txt
+test1.txt
+test2.txt
+
+# Ignore compiled binaries and object files
+*.o
+*.a
+a.out
