@@ -1,7 +1,7 @@
 # Ignore testing text files
 test.txt
-test1.txt
 test2.txt
+test3.txt
 
 # Ignore compiled binaries and object files
 *.o
